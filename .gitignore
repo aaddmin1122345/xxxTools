@@ -8,7 +8,7 @@
 *.so
 *.dylib
 awesomeProject
-.idea
+.idea/
 
 # Test binary, built with `go test -c`
 *.test
