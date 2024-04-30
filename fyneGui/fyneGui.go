@@ -1,3 +1,5 @@
+// fyneGui.go
+
 package fyneGui
 
 import (
@@ -11,6 +13,9 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+var outputLabel *widget.Label // 将 outputLabel 变量声明为全局变量
+
+// GuiInit 初始化 GUI
 func GuiInit() {
 	myApp := app.New()
 	myWindow := myApp.NewWindow("")
@@ -29,7 +34,8 @@ func GuiInit() {
 	// 设置默认选项
 	selectEntry.SetSelected("select a poc")
 
-	var outputLabel = widget.NewLabel("")
+	// 移除局部变量的声明
+	outputLabel = widget.NewLabel("") // 修改为全局变量
 
 	runButton := widget.NewButton("exploit", func() {
 		// 从输入框中获取网址信息
@@ -49,16 +55,15 @@ func GuiInit() {
 			if err != nil {
 				fmt.Println("CVE_2017_8917出错!", err)
 			}
-
 		case "2":
-			_, err := http.SendGetRequest(url)
+			_, _, err := http.SendGetRequest(url)
 			if err != nil {
 				fmt.Println("2出错!", err)
 			}
 		}
 
 		// 清空错误信息
-		outputLabel.SetText("")
+		//SetOutputLabelText("")
 	})
 
 	content := container.New(layout.NewBorderLayout(nil, nil, nil, nil),

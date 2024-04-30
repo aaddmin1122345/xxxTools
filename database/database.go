@@ -9,20 +9,18 @@ import (
 var Db *sql.DB
 
 func dbInit() {
-	db, err := sql.Open("sqlite3", "poc.db")
+	var err error
+	Db, err = sql.Open("sqlite3", "database/poc.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer func(db *sql.DB) {
-		err = db.Close()
-		if err != nil {
 
-		}
-	}(db)
 }
 
-func QueryPoc(db *sql.DB, pocName string) (string, error) {
-	dbInit()
+func QueryPoc(pocName string) (string, error) {
+	if Db == nil {
+		dbInit()
+	}
 	var (
 		payload    string
 		httpMethod string
@@ -30,7 +28,7 @@ func QueryPoc(db *sql.DB, pocName string) (string, error) {
 	)
 
 	// 执行查询语句
-	row := db.QueryRow("SELECT httpMethod, other FROM poc WHERE pocName = ?", pocName)
+	row := Db.QueryRow("SELECT payload, httpMethod, other FROM poc WHERE pocName = ?", pocName)
 
 	// 将查询结果赋值给变量
 	err := row.Scan(&payload, &httpMethod, &text)

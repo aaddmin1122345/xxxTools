@@ -1,6 +1,8 @@
 package main
 
-import "awesomeProject/fyneGui"
+import (
+	"awesomeProject/fyneGui"
+)
 
 func main() {
 	fyneGui.GuiInit()

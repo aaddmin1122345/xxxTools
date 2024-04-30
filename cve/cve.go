@@ -1,3 +1,5 @@
+// cve.go
+
 package cve
 
 import (
@@ -6,19 +8,28 @@ import (
 	"fmt"
 )
 
-//var payload string
-//var err error
-//var request string
-
 func CVE_2017_8917(url string) (string, error) {
-	payload, err := database.QueryPoc(database.Db, "CVE_2017_8917")
-	fmt.Println(payload)
+	payload, err := database.QueryPoc("CVE_2017_8917")
 	if err != nil {
-		return "", err
+		return "查询payload失败!", err
 	}
-	request, err := http.SendGetRequest(url + payload)
+	// 发送 payload
+	rest, statusCode, err := http.SendGetRequest(url + payload)
+	//fmt.Println(statusCode)
 	if err != nil {
-		return "", err
+		return "发送payload失败!", err
 	}
-	return request, nil
+	//var message  string
+	if statusCode == 200 {
+		message := "存在漏洞!"
+		fmt.Println(url + " " + message)
+
+	} else {
+		message := "不存在漏洞!"
+		fmt.Println(url + " " + message)
+	}
+	//if err = fyneGui.TextUpdater.UpdateText(message); err != nil {
+	//	return "更新 GUI 文本失败!", err
+	//}
+	return rest, nil
 }

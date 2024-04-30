@@ -6,13 +6,10 @@ import (
 	"net/http"
 )
 
-//var resp *http.Response
-//var err error
-
-func SendGetRequest(url string) (string, error) {
+func SendGetRequest(url string) (string, int, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return "请求http时发生错误!", err
+		return "获取body失败!", resp.StatusCode, nil
 	}
 	defer func(Body io.ReadCloser) {
 		err = Body.Close()
@@ -25,8 +22,10 @@ func SendGetRequest(url string) (string, error) {
 	var body bytes.Buffer
 	_, err = io.Copy(&body, resp.Body)
 	if err != nil {
-		return "", err
+		return "打印body失败!", '_', nil
 	}
+	//fmt.Println(resp.StatusCode)
 
-	return body.String(), nil
+	return body.String(), resp.StatusCode, nil
+
 }
