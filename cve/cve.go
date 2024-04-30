@@ -1,5 +1,3 @@
-// cve.go
-
 package cve
 
 import (
@@ -8,28 +6,24 @@ import (
 	"fmt"
 )
 
+// CVE_2017_8917 检查给定 URL 是否存在 CVE_2017_8917 漏洞
 func CVE_2017_8917(url string) (string, error) {
 	payload, err := database.QueryPoc("CVE_2017_8917")
 	if err != nil {
-		return "查询payload失败!", err
+		return "", fmt.Errorf("查询payload失败: %v", err)
 	}
-	// 发送 payload
-	rest, statusCode, err := http.SendGetRequest(url + payload)
-	//fmt.Println(statusCode)
-	if err != nil {
-		return "发送payload失败!", err
-	}
-	//var message  string
-	if statusCode == 200 {
-		message := "存在漏洞!"
-		fmt.Println(url + " " + message)
 
-	} else {
-		message := "不存在漏洞!"
-		fmt.Println(url + " " + message)
+	rest, statusCode, err := http.SendGetRequest(url + payload)
+	if err != nil {
+		return "", fmt.Errorf("发送payload失败: %v", err)
 	}
-	//if err = fyneGui.TextUpdater.UpdateText(message); err != nil {
-	//	return "更新 GUI 文本失败!", err
-	//}
+
+	message := "不存在漏洞!"
+	if statusCode == 200 {
+		message = "存在漏洞!"
+	}
+
+	fmt.Println(url, message) // 打印 URL 和消息
+
 	return rest, nil
 }

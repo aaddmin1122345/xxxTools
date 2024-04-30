@@ -2,30 +2,24 @@ package http
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net/http"
 )
 
+// SendGetRequest 发送 GET 请求并返回响应体、状态码和可能的错误
 func SendGetRequest(url string) (string, int, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return "获取body失败!", resp.StatusCode, nil
+		return "", http.StatusInternalServerError, fmt.Errorf("发送请求失败: %v", err)
 	}
-	defer func(Body io.ReadCloser) {
-		err = Body.Close()
-		if err != nil {
+	defer resp.Body.Close()
 
-		}
-	}(resp.Body)
-
-	// 使用 bytes.Buffer 作为目标，将响应体拷贝到其中
 	var body bytes.Buffer
 	_, err = io.Copy(&body, resp.Body)
 	if err != nil {
-		return "打印body失败!", '_', nil
+		return "", resp.StatusCode, fmt.Errorf("读取响应体失败: %v", err)
 	}
-	//fmt.Println(resp.StatusCode)
 
 	return body.String(), resp.StatusCode, nil
-
 }
