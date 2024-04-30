@@ -33,7 +33,7 @@ func QueryPoc(db *sql.DB, pocName string) (string, error) {
 	row := db.QueryRow("SELECT httpMethod, other FROM poc WHERE pocName = ?", pocName)
 
 	// 将查询结果赋值给变量
-	err := row.Scan(&httpMethod, &text)
+	err := row.Scan(&payload, &httpMethod, &text)
 	if err != nil {
 		return "查询有误", err
 	}
